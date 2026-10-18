@@ -30,6 +30,27 @@ Use actual image media, not merely filenames in text:
 
 Preserve each used character's head/body proportions, face, eyes, colors, silhouette, materials, clothing/accessories and signature features. Preserve the environment's design language, not just "a desert". Never merge, rename, recolor, redesign or clone characters accidentally. If the tool supports only a subset of reference images, attach the most relevant character refs plus the world ref and explicitly report the subset used. If no actual image input is possible, do not claim reference lock.
 
+
+## Universal asset lock — every invented element is a reference asset
+Before writing the final video-generation prompt or rendering any shot, enumerate **every visible element**, not just the named cast: all characters, creatures/insects, eggs, food, tools, containers, costumes/accessories, vehicles, plants, rocks, footprints, cracks, spills, crumbs, debris, and other story-critical background objects or effects.
+
+For each unique or continuity-critical element:
+1. Create and approve a dedicated reference image / asset sheet **before video generation**. For objects, show a clean readable view with the exact silhouette, geometry, colors, materials, markings, scale cues, and relevant states. For an egg, food item, or insect, define its exact appearance and size relative to a locked character/prop. For states that change during the story (whole/cracked egg, full/bitten food, intact/broken object), create explicit state references for the planned stages.
+2. Assign a stable asset ID and a single authoritative reference. Maintain an asset registry containing asset ID, reference filename, description, scale, colors/materials, initial position/orientation, owner/holder, state at each timecode, and permitted planned changes.
+3. Attach the actual reference images to the video-generation tool whenever it supports image references. A filename mentioned in text is not an attached image. If the tool has reference-slot limits, prioritize the lead characters, world, and every story-critical asset; split the work into compatible shots or use approved image-to-video/keyframe workflows. Report any asset that could not be reference-locked.
+4. Freeze all unchanging design attributes for the entire episode. A planned state change must be shown on-screen and then persist: if an egg cracks, the crack pattern remains; if food is bitten, the bite shape remains; if an insect turns around, its identity and markings remain; if an object moves, it does not teleport back. No spontaneous redesign, recoloring, scale drift, substitutions, duplication, disappearance/reappearance, or state reset between cuts.
+5. At each shot boundary, compare the outgoing frame and incoming frame against the asset registry and prior frame. If an element is newly introduced without a reference, stop and create/approve its reference before generating that shot. If a generated element deviates from its approved reference, reject and repair the shot; do not excuse it as model creativity.
+6. For many tiny incidental elements that are not individually story-critical, lock them as a single defined set or background layer (e.g. a specific pile of crumbs or a fixed rock cluster) and keep that set stable. Any incidental element that becomes part of the gag must be promoted to a tracked asset with its own reference/state history.
+
+### Mandatory pre-generation asset gate
+Do not proceed to video generation until:
+- The complete visible-element inventory is written.
+- Every story-critical/invented element has an approved reference image and asset ID.
+- State-change references are prepared for any object that changes visibly.
+- The asset registry and shot-by-shot continuity ledger agree.
+- The actual reference media can be attached to the chosen generator.
+If image/reference creation or attachment is unavailable, state the limitation and prepare the reference-sheet prompts first; never claim the element was locked when it was not.
+
 ## Story design — pass before writing the prompt
 Choose a premise that can be understood in one glance:
 - **Want:** what does the protagonist want, physically and immediately?
