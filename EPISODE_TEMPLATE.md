@@ -60,3 +60,21 @@ For every shot boundary, record each character and prop's identity/design, color
 - [ ] Character identities, designs and props remain continuous across all shots; no unexplained changes.
 - [ ] Watermark, if supplied, is fixed at bottom-right with identical placement throughout.
 - [ ] Render inspected; every detected continuity or watermark defect is repaired and checked again.
+
+
+## Complete invented-asset registry (mandatory before generation)
+List every visible element, including objects/creatures invented for this episode. Do not start video generation while a story-critical item lacks an approved reference.
+
+| Asset ID | Element | Reference image/file | Locked design (shape/color/material/markings/scale) | Initial position/state | Planned visible change and persistent resulting state |
+|---|---|---|---|---|---|
+| A-01 | | | | | |
+| A-02 | | | | | |
+| A-03 | | | | | |
+| A-04 | | | | | |
+
+- [ ] All characters, props, food, eggs, insects, tools and story-critical environmental details are inventoried.
+- [ ] Every story-critical/invented asset has an approved reference image before video generation.
+- [ ] State references exist for planned transformations (e.g. whole/cracked egg, full/bitten food, intact/broken prop).
+- [ ] Actual image references are attached to the generator where supported; filenames in text do not count.
+- [ ] Every shot transition preserves all assets' identity and state unless a visible action changes them.
+- [ ] Any unreferenced or drifting story-critical element is a rejection requiring repair and re-review.
