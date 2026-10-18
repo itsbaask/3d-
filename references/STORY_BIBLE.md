@@ -47,3 +47,9 @@ If an approved watermark asset is supplied, composite it in post-production as a
 
 ## Hard prohibitions
 No dialogue or voice-over, no visible text/subtitles or generated logos, no identity drift (the supplied watermark is the sole exception and must be a fixed bottom-right post-production overlay), no unsafe imitation, no cruel or graphic harm, no random character duplication, and no claim that a prompt or ZIP is a rendered video.
+
+
+## Reference-first lock for all story assets
+The master cast references are not enough. Before a video is generated, create an approved reference image for every new story-critical item invented for that episode: eggs, food, insects/creatures, tools, containers, costumes, plants and any prop/effect that the action depends on. Define shape, color, material, markings, scale and each planned state. Assign a stable asset ID and record it in the episode asset registry.
+
+Every change must be a visible, motivated action and the new state persists afterward. A cracked egg remains cracked with the same crack pattern; bitten food keeps its bite; an insect retains its markings and body shape; a moved prop stays at its resulting location. Never allow random redesign, morphing, scale/color drift, duplication, teleportation or unexplained reset across shots. Lock groups of minor background details as stable sets; promote any detail that becomes part of the gag to a tracked asset. Missing references or visible continuity drift are grounds to reject and repair the shot.
