@@ -103,3 +103,9 @@ Score 0–5 each: hook, mute readability, reference identity, physical acting, v
 
 ## Delivery honesty
 The guide does not generate video by itself. Return an actual rendered file/link only when the video tool provides one. State actual duration/ratio when known and disclose anything that could not be verified.
+
+
+## Reference-first rule for every invented element
+Before generating video, inventory every visible story element, including anything invented during story development: eggs, meals, insects, tools, containers, costume pieces, plants, crumbs, cracks, spills and other props/effects. Give each story-critical element a stable asset ID and create/approve its reference image first. Reference sheets must define exact silhouette, colors, material, markings, relative scale and relevant planned states. Attach the actual reference media to the generator; filenames alone do not count.
+
+Track all assets in an asset registry and continuity ledger at every shot boundary. Freeze design attributes throughout the episode. Only an explicit visible story action may change an element's state, and that change persists (e.g. a cracked egg stays cracked; bitten food keeps the same bite; moved props stay where the action left them). No unexplained morphing, recoloring, size drift, substitutions, duplication, teleporting or state resets. Lock minor background clusters as defined stable layers; any incidental item that becomes part of the gag must become a tracked asset with its own reference. If an element has no approved reference or drifts from it, stop, create/approve the reference or repair the shot, then re-check before delivery.
