@@ -56,7 +56,7 @@ def main() -> int:
         if len(names) != len(REQUIRED):
             raise SystemExit("ZIP has duplicate or missing entries")
         for relative in REQUIRED:
-            if "dola-shorts-world-class/" + relative not in names:
+            if relative not in names:
                 raise SystemExit(f"ZIP entry missing: {relative}")
     digest = hashlib.sha256(OUTPUT.read_bytes()).hexdigest()
     print(f"Built: {OUTPUT.name}")
