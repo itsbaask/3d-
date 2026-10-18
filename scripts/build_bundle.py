@@ -82,7 +82,7 @@ def main() -> int:
     # Some skill installers expect the skill folder itself at the archive root;
     # others expect a single named directory containing SKILL.md. This archive
     # uses the latter layout and omits project-only metadata/scripts.
-    write_zip(SKILL_OUTPUT, SKILL_FILES, prefix=f"{SKILL_NAME}/")
+    write_zip(SKILL_OUTPUT, SKILL_FILES)
     for path in (OUTPUT, SKILL_OUTPUT):
         print(f"Built: {path.name}")
         print(f"Entries: {len(zipfile.ZipFile(path).namelist())}")
