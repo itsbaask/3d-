@@ -23,12 +23,18 @@ Use each master image as the authority for identity. Preserve face, eyes, body/h
 6. Let the payoff breathe long enough for the audience to register it.
 7. End on a visual rhyme with the opening, ideally with a changed meaning.
 
-## Continuity rules
+## Non-negotiable watermark rule
+If an approved watermark asset is supplied, composite it in post-production as a separate overlay fixed to the bottom-right of the final 9:16 canvas. Position, scale, opacity and margins remain identical for every frame. It is screen-space UI/branding, not a world object: it never follows camera movement, perspective, characters or lighting, and never moves, pulses, rotates, resizes, flickers or disappears. Never rely on the video model to generate the watermark. If the asset is absent, flag the missing input; do not invent a substitute.
+
+## Strict continuity rules
 - Track which hand holds the prop and where it is after each beat.
 - Preserve screen direction, foot placement, shadows and relative character scale.
 - Do not teleport props or reset damage/positions between cuts.
 - Use consistent time of day and light direction unless a visible story event motivates a change.
 - Avoid crowding the vertical frame with all characters at once.
+- Lock all visual elements across time: character model/face/proportions/colors/materials/accessories, prop geometry/count/state, environment layout, screen direction, relative scale, shadows and lighting.
+- Any change must be a planned, visible story action. Once changed, the new state persists until another visible action changes it; never reset an object's state across cuts.
+- Maintain a continuity ledger per shot and verify every transition. If continuity fails, simplify or repair the shot rather than accepting the error.
 
 ## Shot-design checklist
 - Is the goal visible in the first 7 seconds?
@@ -40,4 +46,4 @@ Use each master image as the authority for identity. Preserve face, eyes, body/h
 - Does the ending echo the opening?
 
 ## Hard prohibitions
-No dialogue or voice-over, no visible text/subtitles/logos/watermarks, no identity drift, no unsafe imitation, no cruel or graphic harm, no random character duplication, and no claim that a prompt or ZIP is a rendered video.
+No dialogue or voice-over, no visible text/subtitles or generated logos, no identity drift (the supplied watermark is the sole exception and must be a fixed bottom-right post-production overlay), no unsafe imitation, no cruel or graphic harm, no random character duplication, and no claim that a prompt or ZIP is a rendered video.
