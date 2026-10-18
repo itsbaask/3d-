@@ -15,15 +15,31 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Validate bundle and reference images
+      - name: Validate both packages and reference images
         run: |
           python scripts/quality_gate.py
           python scripts/build_bundle.py
           python -m zipfile -t dola-shorts-world-class-bundle.zip
-      - name: Upload portable ZIP
+          python -m zipfile -t dola-shorts-world-class-skill.zip
+          python - <<'PY'
+          import zipfile
+          z = zipfile.ZipFile("dola-shorts-world-class-skill.zip")
+          assert "dola-shorts-world-class/SKILL.md" in z.namelist()
+          text = z.read("dola-shorts-world-class/SKILL.md").decode("utf-8")
+          assert text.startswith("---\\nname: dola-shorts-world-class\\n")
+          print("Installer package layout/frontmatter: PASS")
+          PY
+      - name: Upload portable project ZIP
         uses: actions/upload-artifact@v4
         with:
           name: dola-shorts-world-class-bundle
           path: dola-shorts-world-class-bundle.zip
+          if-no-files-found: error
+          retention-days: 30
+      - name: Upload installer-ready skill ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: dola-shorts-world-class-skill
+          path: dola-shorts-world-class-skill.zip
           if-no-files-found: error
           retention-days: 30
