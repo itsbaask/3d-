@@ -24,8 +24,8 @@ jobs:
           python - <<'PY'
           import zipfile
           z = zipfile.ZipFile("dola-shorts-world-class-skill.zip")
-          assert "dola-shorts-world-class/SKILL.md" in z.namelist()
-          text = z.read("dola-shorts-world-class/SKILL.md").decode("utf-8")
+          assert "SKILL.md" in z.namelist()
+          text = z.read("SKILL.md").decode("utf-8")
           assert text.splitlines()[:2] == ["---", "name: dola-shorts-world-class"]
           print("Installer package layout/frontmatter: PASS")
           PY
