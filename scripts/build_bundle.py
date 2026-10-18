@@ -48,7 +48,7 @@ def main() -> int:
     # The builder does not include its own generated ZIP; it includes this script as source.
     with zipfile.ZipFile(OUTPUT, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=6) as zf:
         for relative in REQUIRED:
-            zf.write(ROOT / relative, arcname="dola-shorts-world-class/" + relative)
+            zf.write(ROOT / relative, arcname=relative)
         bad = zf.testzip()
         if bad:
             raise SystemExit(f"ZIP CRC test failed: {bad}")
