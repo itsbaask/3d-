@@ -26,7 +26,7 @@ jobs:
           z = zipfile.ZipFile("dola-shorts-world-class-skill.zip")
           assert "dola-shorts-world-class/SKILL.md" in z.namelist()
           text = z.read("dola-shorts-world-class/SKILL.md").decode("utf-8")
-          assert text.startswith("---\\nname: dola-shorts-world-class\\n")
+          assert text.splitlines()[:2] == ["---", "name: dola-shorts-world-class"]
           print("Installer package layout/frontmatter: PASS")
           PY
       - name: Upload portable project ZIP
