@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""pipeline_tracker.py — Continuous-pipeline job tracker for seedane-2.5-60s.
+"""pipeline_tracker.py — Bookkeeping tracker for DOLA Shorts 30s jobs.
 Built-in tools only (text_to_video / image_to_video), FORCED model seedance_2.5.
 TRUE model capability: duration [4, 30] seconds (legacy 15s cap REJECTED).
 No API key. Video Extension fallback available if tool layer still limits.
@@ -21,7 +21,7 @@ STATE_FILE = Path("/tmp/seedane_2_5_60s_pipeline.json")
 LOG_FILE = Path("/tmp/seedane_2_5_60s_pipeline.log")
 VALID_STATUSES = {"pending", "dispatched", "done", "failed", "retry",
                   "extension_pending", "extension_dispatched"}
-FORCED_MODEL = "seedance_2.5"
+FORCED_MODEL = "seedance_2.5"  # requested model label only; this script does not call a video model
 TRUE_DURATION_MIN = 4
 TRUE_DURATION_MAX = 30
 LEGACY_TOOL_CAP = 15  # informational only — not enforced by this skill
@@ -70,9 +70,9 @@ def cmd_init():
     s = {
         "pipeline_id": f"pipe_{int(time.time())}",
         "model": FORCED_MODEL,
-        "skill": "seedane-2.5-60s",
-        "true_duration_range": [TRUE_DURATION_MIN, TRUE_DURATION_MAX],
-        "legacy_tool_cap_note": f"{LEGACY_TOOL_CAP}s — informational only, NOT enforced",
+        "skill": "dola-shorts-30s",
+        "duration_range_seconds": [TRUE_DURATION_MIN, TRUE_DURATION_MAX],
+        "tool_limit_note": f"{LEGACY_TOOL_CAP}s — informational only, NOT enforced",
         "started_at": now_iso(),
         "jobs": {}
     }
@@ -171,7 +171,7 @@ def print_status(s):
         st = j.get("status", "pending")
         counts[st] = counts.get(st, 0) + 1
     print(f"Pipeline {s.get('pipeline_id', '?')}")
-    print(f"  skill={s.get('skill', 'seedane-2.5-60s')}  model={s.get('model', FORCED_MODEL)}")
+    print(f"  skill={s.get('skill', 'dola-shorts-30s')}  model={s.get('model', FORCED_MODEL)}")
     print(f"  true_duration_range={s.get('true_duration_range', [TRUE_DURATION_MIN, TRUE_DURATION_MAX])}s")
     print(f"  total={len(jobs)}  " +
           "  ".join(f"{k}={v}" for k, v in counts.items() if v))
@@ -210,7 +210,7 @@ def cmd_summary():
 
 def main():
     ap = argparse.ArgumentParser(
-        description="Pipeline tracker for seedane-2.5-60s (true 4-60s capability)")
+        description="Bookkeeping tracker for DOLA Shorts 30s jobs; it does not generate videos.")
     sub = ap.add_subparsers(dest="cmd", required=True)
 
     sub.add_parser("init")
@@ -219,7 +219,7 @@ def main():
     e.add_argument("--mode", choices=["text_to_video", "image_to_video"],
                    default="text_to_video")
     e.add_argument("--prompt", required=True)
-    e.add_argument("--ratio", default="16:9")
+    e.add_argument("--ratio", default="9:16")
     e.add_argument("--duration", type=int, default=TRUE_DURATION_MAX,
                    help=f"Duration in seconds. True model range: [{TRUE_DURATION_MIN}, {TRUE_DURATION_MAX}]. Default = max capability.")
     e.add_argument("--image-url", action="append", dest="image_urls")

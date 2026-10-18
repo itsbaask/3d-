@@ -1,0 +1,28 @@
+name: Build DOLA Shorts ZIP
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build-and-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Build ZIP and validate
+        run: |
+          python scripts/build_bundle.py
+          python -m zipfile -t dola-shorts-30s-reference-bundle.zip
+      - name: Upload portable ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: dola-shorts-30s-reference-bundle
+          path: dola-shorts-30s-reference-bundle.zip
+          if-no-files-found: error
+          retention-days: 30
