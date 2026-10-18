@@ -12,7 +12,9 @@ Make a short that is instantly readable on a phone, visually distinctive, emotio
 - Target duration: exactly 30 seconds; use 9:16 portrait. Request 1080x1920 where supported.
 - Premium stylized 3D animation: intentional silhouettes, appealing shapes, polished materials, believable contact and weight, expressive faces, cinematic but readable lighting, clean composition.
 - One central objective, one main gag, a clear cause-and-effect chain, escalation, reversal, payoff, and loopable last beat.
-- No spoken dialogue, no voice-over, no lyrics, no captions/subtitles, no title cards, no logos, no watermark, and no readable on-screen text.
+- No spoken dialogue, no voice-over, no lyrics, no captions/subtitles, no title cards, no generated logos, and no readable on-screen text. The only permitted on-screen brand mark is the supplied watermark overlay, if provided, composited in post-production as a fixed screen-space element at the bottom-right.
+- WATERMARK LOCK (mandatory when a supplied watermark asset exists): anchor it to the bottom-right of the final 9:16 canvas with fixed pixel/normalized coordinates, fixed scale, opacity and margin for every frame. It must never follow the camera, characters, objects, scene perspective, lighting, or motion; never drift, wobble, resize, rotate, animate, disappear, duplicate, or be redrawn by the video model. Composite it after the video render as a separate overlay layer. Keep it inside the safe margin and unobtrusive but legible. If no approved watermark asset is supplied, ask for it or report that it cannot be applied; do not invent one.
+- CONTINUITY LOCK (mandatory): every approved character, prop, costume/accessory, color, material, body/face proportion, environment feature, and damage/state must remain identical from shot to shot unless an explicit, planned story action changes it. A change must be motivated on-screen, persist afterward, and never reset between cuts. Track a continuity ledger for character positions/orientation, screen direction, which hand holds each prop, prop location/state, shadows, lighting direction, and background layout. No spontaneous redesign, morphing, substitution, duplication, disappearing/reappearing objects, or unexplained state changes. If the generator cannot preserve continuity across a cut, use a shorter continuous shot or repair the shot in post; do not accept the mismatch.
 - Audio, if supported: carefully timed nonverbal Foley and restrained music only. The visual story must still work when muted.
 - Family-friendly, safe slapstick. No graphic harm, cruelty, unsafe imitation, or frightening intensity beyond light cartoon surprise.
 - No extra characters unless the gag needs them. Give every included character a clear reason to be in the scene.
@@ -52,6 +54,13 @@ Prefer one main prop, one location, 1–3 active characters, and a maximum of 4 
 
 Do not add overlapping time ranges that make the total ambiguous. Make every beat distinct and keep screen direction and prop state continuous.
 
+## Non-negotiable production gates
+1. **Asset/identity lock:** use the supplied master references as authoritative; do not improvise alternative designs.
+2. **Continuity ledger:** write down each visible character and prop's identity, color/material, screen position, orientation, hand/holder, and state for every shot. Carry each state into the next shot.
+3. **Watermark compositing:** never rely on text-to-video generation to keep the watermark fixed. Add the approved watermark in post as a screen-space overlay, anchored bottom-right on the final canvas, constant position/size/opacity throughout all frames. Verify first, middle, last, and sampled frames for drift or occlusion.
+4. **Render review:** inspect the actual rendered video, not just the prompt. Reject visible identity drift, prop discontinuity, flicker, deformation, unwanted text, watermark movement, inconsistent lighting, weak staging, or unfinished-looking frames. Repair and re-review before delivery.
+5. **Honest delivery:** never claim “zero errors” unless every frame has actually been checked; report remaining limitations plainly.
+
 ## Cinematography and animation quality
 - Compose for 9:16 mobile viewing; keep eyes, hands, key props and the cause of the gag in the center-safe area. Avoid cropping feet/hands during key actions.
 - Establish geography before rapid movement. Keep screen direction consistent across cuts.
@@ -71,7 +80,7 @@ Write the final generation prompt in concise, production-ready English. It must 
 4. Time-coded actions covering all 30 seconds.
 5. Camera and blocking, including spatial continuity.
 6. Animation/material/lighting quality.
-7. Negative constraints: no dialogue/text/logos/watermarks and no identity drift/artifacts.
+7. Negative constraints: no dialogue/text/generated logos, no identity drift/artifacts; the supplied watermark is a fixed post-production overlay at bottom-right, not model-generated.
 8. A loop ending that visually reconnects to the first frame.
 
 Describe observable actions, not vague adjectives alone. Prefer "the jar tips, three dates roll toward the edge, Zuzo catches one, the other two trigger..." over "chaotic funny action". Keep the number of simultaneous moving subjects low. Do not request unsupported technical features as guaranteed.
