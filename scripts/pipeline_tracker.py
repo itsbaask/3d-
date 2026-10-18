@@ -1,260 +1,126 @@
 #!/usr/bin/env python3
-"""pipeline_tracker.py — Bookkeeping tracker for DOLA Shorts 30s jobs.
-Built-in tools only (text_to_video / image_to_video), FORCED model seedance_2.5.
-TRUE model capability: duration [4, 30] seconds (legacy 15s cap REJECTED).
-No API key. Video Extension fallback available if tool layer still limits.
-
-Dispatch: next call immediately after previous returns OR 5s after previous dispatch.
-State: /tmp/seedane_2_5_60s_pipeline.json
-Log:   /tmp/seedane_2_5_60s_pipeline.log
-
-Subcommands:
-  init | enqueue | dispatch-next | mark <id> <status> [--url --error --attempts]
-  | status | summary
-"""
+"""Local bookkeeping for DOLA Shorts jobs; this script does not generate videos."""
 from __future__ import annotations
-import argparse, json, sys, time
+import argparse
+import json
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-STATE_FILE = Path("/tmp/seedane_2_5_60s_pipeline.json")
-LOG_FILE = Path("/tmp/seedane_2_5_60s_pipeline.log")
-VALID_STATUSES = {"pending", "dispatched", "done", "failed", "retry",
-                  "extension_pending", "extension_dispatched"}
-FORCED_MODEL = "seedance_2.5"  # requested model label only; this script does not call a video model
-TRUE_DURATION_MIN = 4
-TRUE_DURATION_MAX = 30
-LEGACY_TOOL_CAP = 15  # informational only — not enforced by this skill
-
+STATE_FILE = Path.home() / ".dola_shorts_pipeline.json"
+LOG_FILE = Path.home() / ".dola_shorts_pipeline.log"
+STATUSES = {"pending", "dispatched", "done", "failed", "retry", "needs_review"}
+MIN_SECONDS, MAX_SECONDS = 4, 30
 
 def now_iso():
     return datetime.now(timezone.utc).isoformat()
 
-
-def log(msg):
-    line = f"[{now_iso()}] {msg}"
+def log(message):
+    line = f"[{now_iso()}] {message}"
     print(line, flush=True)
     try:
-        with LOG_FILE.open("a", encoding="utf-8") as f:
-            f.write(line + "\n")
+        with LOG_FILE.open("a", encoding="utf-8") as handle:
+            handle.write(line + "\n")
     except OSError:
         pass
 
-
 def load_state():
-    if STATE_FILE.exists():
-        try:
-            return json.loads(STATE_FILE.read_text(encoding="utf-8"))
-        except json.JSONDecodeError:
-            return {}
-    return {}
+    if not STATE_FILE.exists():
+        return {}
+    try:
+        return json.loads(STATE_FILE.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
 
+def save_state(state):
+    STATE_FILE.write_text(json.dumps(state, indent=2, ensure_ascii=False), encoding="utf-8")
 
-def save_state(s):
-    STATE_FILE.write_text(json.dumps(s, indent=2, ensure_ascii=False))
+def init_state():
+    state = {"pipeline_id": f"dola_{int(time.time())}", "skill": "dola-shorts-world-class",
+             "duration_range_seconds": [MIN_SECONDS, MAX_SECONDS], "created_at": now_iso(), "jobs": {}}
+    save_state(state)
+    log(f"initialized bookkeeping state at {STATE_FILE}")
+    return 0
 
-
-def clamp_duration(value):
-    """Clamp to TRUE model range [4, 30], NOT the legacy 15s cap."""
-    v = int(value)
-    if v < TRUE_DURATION_MIN:
-        log(f"duration {v}s raised to model min {TRUE_DURATION_MIN}s")
-        return TRUE_DURATION_MIN
-    if v > TRUE_DURATION_MAX:
-        log(f"duration {v}s capped to model max {TRUE_DURATION_MAX}s")
-        return TRUE_DURATION_MAX
-    return v
-
-
-def cmd_init():
-    s = {
-        "pipeline_id": f"pipe_{int(time.time())}",
-        "model": FORCED_MODEL,
-        "skill": "dola-shorts-30s",
-        "duration_range_seconds": [TRUE_DURATION_MIN, TRUE_DURATION_MAX],
-        "tool_limit_note": f"{LEGACY_TOOL_CAP}s — informational only, NOT enforced",
-        "started_at": now_iso(),
-        "jobs": {}
+def enqueue(args):
+    state = load_state()
+    if not state:
+        state = {"pipeline_id": f"dola_{int(time.time())}", "skill": "dola-shorts-world-class",
+                 "duration_range_seconds": [MIN_SECONDS, MAX_SECONDS], "created_at": now_iso(), "jobs": {}}
+    requested = int(args.duration)
+    duration = min(MAX_SECONDS, max(MIN_SECONDS, requested))
+    jid = f"job_{len(state['jobs']) + 1:03d}"
+    state["jobs"][jid] = {
+        "status": "pending", "created_at": now_iso(), "mode": args.mode,
+        "duration_requested": requested, "duration_target": duration,
+        "aspect_ratio": args.ratio, "prompt": args.prompt,
+        "reference_files": args.reference or [], "attempts": 0,
+        "render_url": None, "error": None
     }
-    save_state(s)
-    log(f"initialized (model={FORCED_MODEL}, true duration [{TRUE_DURATION_MIN},{TRUE_DURATION_MAX}]s, built-in tools only, no api key)")
-    print(f"State -> {STATE_FILE}")
+    save_state(state)
+    log(f"enqueued {jid}; requested={requested}s target={duration}s ratio={args.ratio}")
+    print(f"Enqueued {jid}; target {duration}s, {args.ratio}.")
+    print("Bookkeeping only: dispatch and render must be performed by an actual available video tool.")
     return 0
 
-
-def cmd_enqueue(mode, prompt, ratio, duration, image_urls, needs_extension=False):
-    s = load_state() or {
-        "pipeline_id": f"pipe_{int(time.time())}",
-        "model": FORCED_MODEL,
-        "skill": "seedane-2.5-60s",
-        "true_duration_range": [TRUE_DURATION_MIN, TRUE_DURATION_MAX],
-        "started_at": now_iso(),
-        "jobs": {}
-    }
-    jid = f"job_{len(s['jobs']) + 1:02d}"
-    clamped = clamp_duration(duration)
-    s["jobs"][jid] = {
-        "status": "pending",
-        "attempts": 0,
-        "url": None,
-        "error": None,
-        "mode": mode,
-        "prompt": prompt,
-        "ratio": ratio,
-        "duration_requested": int(duration),
-        "duration_clamped": clamped,
-        "model_version": FORCED_MODEL,
-        "enqueued_at": now_iso(),
-        "needs_extension_fallback": bool(needs_extension)
-    }
-    if image_urls:
-        s["jobs"][jid]["image_urls"] = image_urls
-    save_state(s)
-    log(f"enqueued {jid} ({mode}) duration_requested={duration}s clamped={clamped}s")
-    print(f"Enqueued {jid}. Duration clamped to true model range: {clamped}s.")
-    print("Dispatch: next immediately on return OR 5s after dispatch.")
-    return 0
-
-
-def cmd_dispatch_next():
-    s = load_state()
-    if not s:
-        print("No state. Run 'init'.")
+def update_job(args):
+    state = load_state()
+    job = state.get("jobs", {}).get(args.job_id)
+    if not job:
+        print(f"Job not found: {args.job_id}")
         return 1
-    pending = [jid for jid, j in s["jobs"].items()
-               if j["status"] in ("pending", "retry", "extension_pending")]
-    if not pending:
-        print("No pending jobs.")
+    if args.status not in STATUSES:
+        print("Invalid status. Choose: " + ", ".join(sorted(STATUSES)))
+        return 2
+    job["status"] = args.status
+    job["updated_at"] = now_iso()
+    if args.url is not None:
+        job["render_url"] = args.url
+    if args.error is not None:
+        job["error"] = args.error
+    if args.attempts is not None:
+        job["attempts"] = args.attempts
+    save_state(state)
+    log(f"{args.job_id} -> {args.status}")
+    return 0
+
+def show_status():
+    state = load_state()
+    if not state:
+        print("No pipeline state. Run: python scripts/pipeline_tracker.py init")
         return 0
-    jid = pending[0]
-    j = s["jobs"][jid]
-    j["status"] = "dispatched" if j["status"] != "extension_pending" else "extension_dispatched"
-    j["dispatched_at"] = now_iso()
-    save_state(s)
-    log(f"dispatching {jid} ({j['mode']}) model={FORCED_MODEL} duration={j['duration_clamped']}s")
-    print(json.dumps({"id": jid, **j}, ensure_ascii=False, indent=2))
+    jobs = state.get("jobs", {})
+    print(f"Pipeline: {state.get('pipeline_id')} | skill: {state.get('skill')}")
+    print(f"Jobs: {len(jobs)}")
+    for jid, job in jobs.items():
+        print(f"- {jid}: {job.get('status')} | {job.get('duration_target')}s | {job.get('aspect_ratio')} | render={job.get('render_url') or 'not set'}")
     return 0
-
-
-def cmd_mark(job_id, status, url, error, attempts):
-    if status not in VALID_STATUSES:
-        print(f"status must be one of {VALID_STATUSES}")
-        return 1
-    s = load_state()
-    if not s or job_id not in s.get("jobs", {}):
-        print(f"job '{job_id}' not found")
-        return 1
-    j = s["jobs"][job_id]
-    j["status"] = status
-    j["updated_at"] = now_iso()
-    if url is not None:
-        j["url"] = url
-    if error is not None:
-        j["error"] = error
-    if attempts is not None:
-        j["attempts"] = attempts
-    save_state(s)
-    msg = f"job {job_id} -> {status}"
-    if url:
-        msg += f" url={url}"
-    if error:
-        msg += f" error={error}"
-    log(msg)
-    print(f"Marked {job_id} = {status}")
-    return 0
-
-
-def print_status(s):
-    jobs = s.get("jobs", {})
-    counts = {st: 0 for st in VALID_STATUSES}
-    for j in jobs.values():
-        st = j.get("status", "pending")
-        counts[st] = counts.get(st, 0) + 1
-    print(f"Pipeline {s.get('pipeline_id', '?')}")
-    print(f"  skill={s.get('skill', 'dola-shorts-30s')}  model={s.get('model', FORCED_MODEL)}")
-    print(f"  true_duration_range={s.get('true_duration_range', [TRUE_DURATION_MIN, TRUE_DURATION_MAX])}s")
-    print(f"  total={len(jobs)}  " +
-          "  ".join(f"{k}={v}" for k, v in counts.items() if v))
-    for jid, j in jobs.items():
-        if j.get("status") in ("done", "failed"):
-            extra = ""
-            if j.get("url"):
-                extra = f" url={j['url']}"
-            elif j.get("error"):
-                extra = f" error={j['error']}"
-            print(f"    {jid}: {j['status']} dur={j.get('duration_clamped', '?')}s{extra}")
-
-
-def cmd_status():
-    s = load_state()
-    if not s:
-        print("No active pipeline.")
-        return 0
-    print_status(s)
-    return 0
-
-
-def cmd_summary():
-    s = load_state()
-    if not s:
-        print("No state.")
-        return 0
-    print_status(s)
-    if any(j.get("url") for j in s["jobs"].values()):
-        print("\nDelivered videos:")
-        for jid, j in s["jobs"].items():
-            if j.get("url"):
-                print(f"  {jid}: dur={j.get('duration_clamped', '?')}s -> {j['url']}")
-    return 0
-
 
 def main():
-    ap = argparse.ArgumentParser(
-        description="Bookkeeping tracker for DOLA Shorts 30s jobs; it does not generate videos.")
-    sub = ap.add_subparsers(dest="cmd", required=True)
-
-    sub.add_parser("init")
-
-    e = sub.add_parser("enqueue")
-    e.add_argument("--mode", choices=["text_to_video", "image_to_video"],
-                   default="text_to_video")
-    e.add_argument("--prompt", required=True)
-    e.add_argument("--ratio", default="9:16")
-    e.add_argument("--duration", type=int, default=TRUE_DURATION_MAX,
-                   help=f"Duration in seconds. True model range: [{TRUE_DURATION_MIN}, {TRUE_DURATION_MAX}]. Default = max capability.")
-    e.add_argument("--image-url", action="append", dest="image_urls")
-    e.add_argument("--needs-extension", action="store_true", dest="needs_extension",
-                   help="Flag that this job may need Video Extension fallback")
-
-    sub.add_parser("dispatch-next")
-
-    m = sub.add_parser("mark")
-    m.add_argument("job_id")
-    m.add_argument("status")
-    m.add_argument("--url")
-    m.add_argument("--error")
-    m.add_argument("--attempts", type=int)
-
-    sub.add_parser("status")
-    sub.add_parser("summary")
-
-    a = ap.parse_args()
-
-    if a.cmd == "init":
-        return cmd_init()
-    if a.cmd == "enqueue":
-        return cmd_enqueue(a.mode, a.prompt, a.ratio, a.duration,
-                           a.image_urls, a.needs_extension)
-    if a.cmd == "dispatch-next":
-        return cmd_dispatch_next()
-    if a.cmd == "mark":
-        return cmd_mark(a.job_id, a.status, a.url, a.error, a.attempts)
-    if a.cmd == "status":
-        return cmd_status()
-    if a.cmd == "summary":
-        return cmd_summary()
-    return 0
-
+    parser = argparse.ArgumentParser(description=__doc__)
+    sub = parser.add_subparsers(dest="command", required=True)
+    sub.add_parser("init", help="create a local bookkeeping state")
+    add = sub.add_parser("enqueue", help="record a planned render")
+    add.add_argument("--mode", choices=["text-to-video", "image-to-video"], default="image-to-video")
+    add.add_argument("--prompt", required=True)
+    add.add_argument("--ratio", choices=["9:16", "16:9", "1:1"], default="9:16")
+    add.add_argument("--duration", type=int, default=30)
+    add.add_argument("--reference", action="append", help="reference file path; repeat as needed")
+    mark = sub.add_parser("mark", help="update bookkeeping status after external action")
+    mark.add_argument("job_id")
+    mark.add_argument("status", choices=sorted(STATUSES))
+    mark.add_argument("--url")
+    mark.add_argument("--error")
+    mark.add_argument("--attempts", type=int)
+    sub.add_parser("status", help="show local jobs")
+    args = parser.parse_args()
+    if args.command == "init":
+        return init_state()
+    if args.command == "enqueue":
+        return enqueue(args)
+    if args.command == "mark":
+        return update_job(args)
+    return show_status()
 
 if __name__ == "__main__":
-    sys.exit(main())
+    raise SystemExit(main())

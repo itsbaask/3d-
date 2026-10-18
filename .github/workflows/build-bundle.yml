@@ -1,4 +1,4 @@
-name: Build DOLA Shorts ZIP
+name: Build DOLA Shorts World-Class ZIP
 on:
   push:
     branches: [main]
@@ -15,14 +15,15 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Build ZIP and validate
+      - name: Validate bundle and reference images
         run: |
+          python scripts/quality_gate.py
           python scripts/build_bundle.py
-          python -m zipfile -t dola-shorts-30s-reference-bundle.zip
+          python -m zipfile -t dola-shorts-world-class-bundle.zip
       - name: Upload portable ZIP
         uses: actions/upload-artifact@v4
         with:
-          name: dola-shorts-30s-reference-bundle
-          path: dola-shorts-30s-reference-bundle.zip
+          name: dola-shorts-world-class-bundle
+          path: dola-shorts-world-class-bundle.zip
           if-no-files-found: error
           retention-days: 30

@@ -1,33 +1,46 @@
-# DOLA Shorts — Episode Template
+# Episode Planning Sheet — DOLA Shorts
 
-## Defaults
-- Target duration: exactly 30 seconds
-- Aspect ratio: 9:16 portrait
-- Original polished 3D cartoon, desert world
-- No dialogue, voice-over or on-screen text
-- Nonverbal effects only if audio is supported
-- Loop-friendly ending
+## Premise
+- **Working title (internal only; never show on video):**
+- **Lead character:**
+- **Visible goal:**
+- **Obstacle:**
+- **Main prop:**
+- **Why the first attempt fails:**
+- **Escalation:**
+- **Surprising reversal:**
+- **Payoff image:**
+- **Opening image / loop-ending echo:**
 
-## Actual reference image inputs
-- `references/ZUZO_MASTER.png` → Zuzo
-- `references/MAKRON_MASTER.png` → Makron
-- `references/QARQOOSH_MASTER.png` → Qarqoosh
-- `references/SHAQLAB_MASTER.png` → Shaqlab
-- `references/CHICKEN_FAMILY_MASTER.png` → chicken family
-- `references/DESERT_WORLD_MASTER.png` → desert world
+## 30-second shot plan
+| Time | Action | Character intention / expression | Camera & framing | Continuity check |
+|---|---|---|---|---|
+| 0–1 s | | | | |
+| 1–3 s | | | | |
+| 3–7 s | | | | |
+| 7–13 s | | | | |
+| 13–19 s | | | | |
+| 19–24 s | | | | |
+| 24–28 s | | | | |
+| 28–30 s | | | | |
 
-Attach the image files as actual media inputs; filenames in a text prompt do not supply the images.
+## Actual reference inputs to attach
+- [ ] Zuzo: `references/ZUZO_MASTER.png`
+- [ ] Makron: `references/MAKRON_MASTER.png`
+- [ ] Qarqoosh: `references/QARQOOSH_MASTER.png`
+- [ ] Shaqlab: `references/SHAQLAB_MASTER.png`
+- [ ] Chicken family: `references/CHICKEN_FAMILY_MASTER.png`
+- [ ] Desert world: `references/DESERT_WORLD_MASTER.png`
 
-## Beat sheet (30 seconds)
-- 0–3 s: hook
-- 3–8 s: one clear goal
-- 8–16 s: first failed attempt
-- 16–23 s: escalation/reversal
-- 23–28 s: harmless payoff
-- 28–30 s: visual echo of the opening
+Check only the references for characters/environment used in this episode and actually attach those media files. Never mark a reference as attached just because its filename is in the prompt.
 
-## Episode idea
-- Visual goal: [fill in]
-- Main prop: [fill in]
-- Funny reversal: [fill in]
-- Loop-ending image: [fill in]
+## Final prompt checklist
+- [ ] One sentence explains the goal and obstacle.
+- [ ] All eight time blocks total exactly 30 seconds.
+- [ ] Cause and effect are visually explicit.
+- [ ] Portrait-safe framing; faces and main prop stay visible.
+- [ ] Character identities and world match actual references.
+- [ ] No dialogue, voice-over, visible text, logos or watermark.
+- [ ] Safe slapstick; no graphic harm or dangerous imitation.
+- [ ] Final image/motion echoes the opening.
+- [ ] Render reviewed; actual duration and ratio checked where possible.

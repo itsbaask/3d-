@@ -1,49 +1,98 @@
-# DOLA Shorts — Prompt Guide
+# DOLA Shorts — Premium Prompt & Direction Guide
 
-## Fixed specification
-- 30 seconds total; portrait 9:16 (1080x1920 when supported).
-- Original polished 3D cartoon; expressive nonverbal acting; desert-world continuity.
-- No dialogue, voice-over, captions, subtitles, title cards, logos, watermarks or readable text.
-- Nonverbal cartoon sound effects only if supported.
+This guide turns a story idea into one tightly directed, silent 30-second cartoon. Use concrete visual actions and protect character identity above visual complexity.
 
-## Required actual media inputs
-Attach these images as media inputs; mentioning filenames in a prompt is not enough:
-1. `references/ZUZO_MASTER.png` → Zuzo.
-2. `references/MAKRON_MASTER.png` → Makron.
-3. `references/QARQOOSH_MASTER.png` → Qarqoosh.
-4. `references/SHAQLAB_MASTER.png` → Shaqlab.
-5. `references/CHICKEN_FAMILY_MASTER.png` → chicken family.
-6. `references/DESERT_WORLD_MASTER.png` → desert setting, palette and props.
+## Locked brief
+- 30 seconds; portrait 9:16; request 1080x1920 where supported.
+- Polished stylized 3D, appealing silhouettes, expressive nonverbal acting, desert-world continuity.
+- No speech, voice-over, lyrics, captions, subtitles, readable text, logos, title cards or watermarks.
+- Visual story must be understandable muted. Sound effects/music are optional and only if supported.
+- One objective, one main gag, logical escalation, clear payoff, loopable final beat.
 
-Preserve exact identity, proportions, colors, materials and distinguishing details. If the generation tool cannot receive actual images, say so honestly.
+## Actual reference media mapping
+Attach the image files as media inputs; text names and URLs in a prompt do not by themselves attach images.
+1. `ZUZO_MASTER.png` — Zuzo.
+2. `MAKRON_MASTER.png` — Makron.
+3. `QARQOOSH_MASTER.png` — Qarqoosh.
+4. `SHAQLAB_MASTER.png` — Shaqlab.
+5. `CHICKEN_FAMILY_MASTER.png` — chicken family.
+6. `DESERT_WORLD_MASTER.png` — world design, palette, terrain, props.
+Preserve exact identity, proportions, colors, materials, face and signature details. Attach only characters that actually appear plus the world reference if input slots are limited; disclose any omitted reference.
 
-## 30-second beat sheet
+## Story test before prompt
+Answer in one short line each:
+- Want: what does the lead want right now?
+- Obstacle: what blocks it visually?
+- Plan: what action do they try?
+- Escalation: how does the next attempt make the problem worse?
+- Reversal: what logical surprise turns the plan against them?
+- Payoff: what image/action delivers the laugh?
+- Loop: what framing/prop/motion from the opening returns at the end?
+Reject ideas that need dialogue, lore, several locations or more than one main gag.
+
+## Timing: total exactly 30 seconds
+| Time | Purpose | Direction |
+|---|---|---|
+| 0–1s | Cold open | Start with action or a striking visual contradiction |
+| 1–3s | Hook | Reveal the funny problem clearly |
+| 3–7s | Goal | Establish goal, prop and spatial layout |
+| 7–13s | Attempt | One clear plan fails |
+| 13–19s | Escalation | Raise stakes by changing one variable |
+| 19–24s | Reversal | A surprising but logical backfire |
+| 24–28s | Payoff | Strong safe visual gag and readable reaction |
+| 28–30s | Loop | Return to a matching visual or movement |
+
+## Production-ready prompt template
 ```text
-0-3s: Visual hook; show an impending funny problem.
-3-8s: Establish one goal and clear staging.
-8-16s: First attempt fails in a readable way.
-16-23s: Escalation or reversal.
-23-28s: Harmless slapstick payoff.
-28-30s: Final reaction/composition echoes the opening for a loop.
+Create one coherent 30-second portrait 9:16 premium stylized 3D cartoon short.
+Target 1080x1920 if supported. No intro, title, text, logo or watermark.
+
+REFERENCE LOCK:
+Use the attached image inputs as the authoritative visual references:
+[map each attached image to its named character/world].
+Preserve exact face, proportions, silhouette, colors, materials and signature details.
+Do not redesign, merge, duplicate or morph characters. Keep the desert world consistent.
+
+STORY:
+[One sentence stating the lead's immediate visual goal and obstacle.]
+Main prop: [one prop]. Active characters: [only necessary cast].
+
+ACTION / TIMING:
+0-1s: [start in motion; striking visual].
+1-3s: [hook becomes unmistakable].
+3-7s: [goal and geography].
+7-13s: [first attempt and visible cause/effect].
+13-19s: [escalation; one clear change].
+19-24s: [logical reversal/backfire].
+24-28s: [safe slapstick payoff and reaction].
+28-30s: [pose/prop/motion/framing echoes the opening].
+
+CAMERA & ANIMATION:
+Portrait-safe composition; faces, hands and gag remain visible on a phone.
+Establish geography before movement; preserve screen direction and prop continuity.
+Use purposeful wide/medium/close shots, readable silhouettes, anticipation, contact,
+follow-through and settle. Consistent lighting, grounded shadows, believable weight,
+polished materials and restrained secondary motion.
+
+NEGATIVE CONSTRAINTS:
+No dialogue, voice-over, lyrics, captions, subtitles, readable text, logos or watermark.
+No character identity drift, face/eye changes, extra limbs, duplicate bodies, morphing,
+flicker, texture crawl, floating props, foot sliding, teleporting, random camera shake,
+unmotivated cuts, excessive blur or unreadable action. Family-friendly harmless slapstick.
+The entire story must make sense with audio muted. End on a loop-friendly visual echo.
+Total target duration 30 seconds, portrait 9:16.
 ```
 
-## Prompt template
-```text
-Create one coherent 30-second portrait 9:16 polished 3D cartoon short.
-Use the attached reference images as authoritative inputs:
-map each supplied image to its named character or desert world.
-Preserve exact identities, proportions, colors, materials and details.
-Story objective: [one simple visual goal].
-0-3s: [immediate hook].
-3-8s: [goal and staging].
-8-16s: [first attempt and failure].
-16-23s: [escalation/reversal].
-23-28s: [harmless visual payoff].
-28-30s: [ending that echoes the opening].
-Expressive nonverbal acting, clear silhouettes, mobile-friendly framing,
-consistent lighting and props, coherent movement and cause-and-effect.
-No dialogue, voice-over, captions, subtitles, readable text, logos or watermark.
-Nonverbal sound effects only if supported. Total 30 seconds, portrait 9:16.
-```
+## Mobile-first direction
+- Keep the lead's eyes, hands and main prop in a central safe region.
+- Ensure the gag still reads when the frame is small.
+- Do not use wide empty establishing shots; begin close to the problem.
+- Cut only when a new view makes cause/effect clearer.
+- Use one main prop and no more than 1–3 active characters where possible.
+- Do not let dust, motion blur, depth of field or camera movement obscure the gag.
 
-Keep faces and action inside a mobile-safe center area. Maintain screen direction, prop continuity, lighting and scale. One main gag is better than a random montage. The guide is not a video generator; report actual tool limitations.
+## Quality review
+Score 0–5 each: hook, mute readability, reference identity, physical acting, vertical composition, escalation/payoff, visual consistency, no text/logos, loop ending, audio support (if present). Aim for at least 40/50 and no critical failures. A good prompt is not proof of a good render.
+
+## Delivery honesty
+The guide does not generate video by itself. Return an actual rendered file/link only when the video tool provides one. State actual duration/ratio when known and disclose anything that could not be verified.
