@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "dola-shorts-30s-reference-bundle.zip"
 REQUIRED = [
     "README.md", "SKILL.md", "skill.json", "EPISODE_TEMPLATE.md",
-    "references/prompt_guide.md", "scripts/pipeline_tracker.py",
+    "references/prompt_guide.md", "scripts/pipeline_tracker.py", "scripts/build_bundle.py",
     "references/ZUZO_MASTER.png", "references/MAKRON_MASTER.png",
     "references/QARQOOSH_MASTER.png", "references/SHAQLAB_MASTER.png",
     "references/CHICKEN_FAMILY_MASTER.png", "references/DESERT_WORLD_MASTER.png",
